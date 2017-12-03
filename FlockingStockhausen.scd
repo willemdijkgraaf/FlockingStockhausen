@@ -1,11 +1,13 @@
 // OSC SEND
 (
 ~p3 = NetAddr.new("127.0.0.1", 10001);    // create the NetAddr for the processing sketch
-~p3.sendMsg("/P3/LeftMargin", 200);
-~p3.sendMsg("/P3/RightMargin", 700);
-~p3.sendMsg("/P3/TopMargin", 240);
-~p3.sendMsg("/P3/BottomMargin", 300);
-~p3.sendMsg("/P3/PopulationSize", 8);
+~p3.sendMsg("/P3/LeftMargin", 0);
+~p3.sendMsg("/P3/RightMargin", 400);
+~p3.sendMsg("/P3/TopMargin",10);
+~p3.sendMsg("/P3/BottomMargin", 20);
+~p3.sendMsg("/P3/PopulationSize", 20);
+
+~p3.sendMsg("/P3/FrameRate", 60);
 )
 
 // TEMPORAL FUNCTION TO SET POPULATION SIZE
@@ -24,9 +26,6 @@
 ~populationGrowth.next;
 TempoClock.default.sched(0, ~populationGrowth);
 ~populationGrowth.stop;
-
-~
-
 
 // OSC RECEIVE
 OSCFunc.trace(true); // Turn posting on
@@ -59,5 +58,7 @@ SynthDef("starting-SinOsc",
 ~oscAdjustSynth= OSCdef.newMatching(\SCAdjustSynth, { arg msg, time, addr, recvPort; ~adjustSynth.value(msg[1], msg[2], msg[3]);}, "/SC/AdjustSynth");
 ~oscFreeSynth= OSCdef.newMatching(\SCFreeSynth, { arg msg, time, addr, recvPort; ~freeSynth.value(msg[1]);}, "/SC/FreeSynth");
 )
+
 ~oscCreateSynth.free;
 ~oscAdjustSynth.free;
+~oscFreeSynth.free;

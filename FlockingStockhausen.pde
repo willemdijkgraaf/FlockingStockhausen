@@ -85,4 +85,12 @@ void oscEvent(OscMessage theOscMessage) {
     _vehicles.setPopulationSize(populationSize);
     return;
   }
+  
+  // Frame rate
+  if (theOscMessage.checkAddrPattern("/P3/FrameRate") && theOscMessage.checkTypetag("i") ) {
+    int rate = theOscMessage.get(0).intValue();
+    if (rate > 60) return;
+    frameRate(rate);
+    return;
+  }
 }
