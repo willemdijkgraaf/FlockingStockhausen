@@ -181,8 +181,14 @@ class Vehicle {
     update();
     borders();
     drawMe(groupCount, groupIntensity);
+    playMe();
   }
-
+  void playMe() {
+    int freq = (int)map(height - _pos.y, 0, height, 50, 4000);
+    float amp = map(_pos.x, 0, width, 0, 1);
+    _synth.adjustSynth(_id,freq,amp);
+  }
+  
   void drawMe(int groupCount, int intensity) {
     float theta = _vel.heading() + PI / 2;
     color myColor = color(intensity,0,0);

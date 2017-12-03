@@ -35,8 +35,7 @@ class Vehicles {
       float maxForce = random(0.75, 1.25);
       float mass = 1.0;
       _vehicles[i] = new Vehicle(i, x, y, maxSpeed, maxForce, mass, _desiredDistance, _swarmDistance, _margins, _synth);
-    
-      
+      _synth.createSynth(i);
     }
   }
   
@@ -48,7 +47,13 @@ class Vehicles {
       initPopulation(_populationSize, size);
     }
     
+    if (populationSize < _populationSize) {
+      _synth.stopRange(populationSize, _populationSize - populationSize);
+    }
+    
     _populationSize = populationSize;
+    
+    
   }
   
   void resetGroupMembership (int member) {

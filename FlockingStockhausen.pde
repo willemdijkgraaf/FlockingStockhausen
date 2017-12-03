@@ -1,6 +1,7 @@
 import oscP5.*;
-OscP5 _oscReceive;
-OscP5 _oscSend;
+import netP5.*;
+
+OscP5 _osc;
 
 int _clock;
 int _groupMembershipUpdateRate;
@@ -20,16 +21,14 @@ void setup() {
   
   _groupMembershipUpdateRate = 10;
   
-  _oscReceive = new OscP5(this, 10001);
-  _oscSend = new OscP5(this, 57120);
-  Synth synth = new Synth(_oscSend);
+  NetAddress remoteLocation = new NetAddress("127.0.0.1",57120);
+  _osc = new OscP5(this, 10001);
+  Synth synth = new Synth(_osc, remoteLocation);
+  
   int initialPopulationSize = 0;
   float swarmDistance = 50;
   float desiredDistance = 30;
   _vehicles = new Vehicles(initialPopulationSize, swarmDistance, desiredDistance, _margins, synth);
-
-  _oscReceive = new OscP5(this, 10001);
-  _oscSend = new OscP5(this, 57120);
 }
 
 void draw() {
