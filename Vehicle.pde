@@ -1,39 +1,39 @@
 class Vehicle {
-  float mass;
-  PVector pos;
-  PVector vel;
-  PVector acc;
-  float size;
-  float maxSpeed;
-  float maxForce;
-  float desiredDistance;
-  float swarmDistance;
+  float _mass;
+  PVector _pos;
+  PVector _vel;
+  PVector _acc;
+  float _size;
+  float _maxSpeed;
+  float _maxForce;
+  float _desiredDistance;
+  float _swarmDistance;
   
   int groupId;
   
   float marginTop, marginRight, marginBottom, marginLeft;
   
   Vehicle(float x, float y, float ms, float mf, float mss, float desDistance, float swmDistance) {
-    pos = new PVector(x, y);
-    vel = new PVector(0, 0);
-    acc = new PVector(0, 0);
-    this.maxSpeed = ms;
-    this.maxForce = mf;
-    this.mass = mss;
-    this.size = this.mass * 4;
-    this.desiredDistance = desDistance;
-    this.swarmDistance = swmDistance;
+    _pos = new PVector(x, y);
+    _vel = new PVector(0, 0);
+    _acc = new PVector(0, 0);
+    this._maxSpeed = ms;
+    this._maxForce = mf;
+    this._mass = mss;
+    this._size = this._mass * 4;
+    this._desiredDistance = desDistance;
+    this._swarmDistance = swmDistance;
     
-    marginTop = 2 * size;
-    marginBottom = height - 2 * size;
-    marginLeft = 2* size;
-    marginRight = width - 2 * size;
+    marginTop = 2 * _size;
+    marginBottom = height - 2 * _size;
+    marginLeft = 2* _size;
+    marginRight = width - 2 * _size;
   }
   
-  void applyBehaviors(Vehicle[] vehicles) {
-    PVector separateForce = separate(vehicles);
-    PVector alignForce = align(vehicles);
-    PVector cohesionForce = cohesion(vehicles);
+  void applyBehaviors(Vehicle[] vehicles, int populationSize) {
+    PVector separateForce = separate(vehicles, populationSize);
+    PVector alignForce = align(vehicles, populationSize);
+    PVector cohesionForce = cohesion(vehicles, populationSize);
 
     //separateForce.mult(1);
     //alignForce.mult(1);
@@ -46,53 +46,48 @@ class Vehicle {
   
   void applyForce(PVector force) {
     PVector f = force.copy();
-    f.div(mass);
-    acc.add(f);
+    f.div(_mass);
+    _acc.add(f);
   }
   
   void update() {
-    vel.add(acc);
-    vel.limit(maxSpeed);
-    pos.add(vel);
-    acc.set(0, 0);
+    _vel.add(_acc);
+    _vel.limit(_maxSpeed);
+    _pos.add(_vel);
+    _acc.set(0, 0);
   }
 
   void borders() {
-    // jump from left to right or from top to bottom (and vice versa)
-    //if (this.pos.x < -this.r) this.pos.x = width+this.r;
-    //if (this.pos.y < -this.r) this.pos.y = height+this.r;
-    //if (this.pos.x > width+this.r) this.pos.x = -this.r;
-    //if (this.pos.y > height+this.r) this.pos.y = -this.r;
     
     // bounce of the borders
-    if (this.pos.x < marginLeft) {
-      this.vel.x = this.vel.x * -1.0;
-      this.pos.x = this.pos.x + size;
+    if (this._pos.x < marginLeft) {
+      this._vel.x = this._vel.x * -1.0;
+      this._pos.x = this._pos.x + _size;
     }
-    if (this.pos.y < marginTop) {
-      this.vel.y = this.vel.y * -1.0;
-      this.pos.y = this.pos.y + size;
+    if (this._pos.y < marginTop) {
+      this._vel.y = this._vel.y * -1.0;
+      this._pos.y = this._pos.y + _size;
     }
-    if (this.pos.x > marginRight) {
-      this.vel.x = this.vel.x * -1.0;
-      this.pos.x = this.pos.x - size;
+    if (this._pos.x > marginRight) {
+      this._vel.x = this._vel.x * -1.0;
+      this._pos.x = this._pos.x - _size;
     }
-    if (this.pos.y > marginBottom) {
-      this.vel.y = this.vel.x * -1.0;
-      this.pos.y = this.pos.y - size;
+    if (this._pos.y > marginBottom) {
+      this._vel.y = this._vel.x * -1.0;
+      this._pos.y = this._pos.y - _size;
     }
   }
 
 
 
-  PVector separate(Vehicle[] vehicles) {
+  PVector separate(Vehicle[] vehicles, int populationSize) {
     PVector sum = new PVector(0, 0);
     int count = 0;
 
-    for (int i = 0; i < vehicles.length; i++) {
-      float d = PVector.dist(this.pos, vehicles[i].pos);
-      if ((d > 0) && (d < this.desiredDistance)) {
-        PVector diff = PVector.sub(this.pos, vehicles[i].pos);
+    for (int i = 0; i < populationSize; i++) {
+      float d = PVector.dist(this._pos, vehicles[i]._pos);
+      if ((d > 0) && (d < this._desiredDistance)) {
+        PVector diff = PVector.sub(this._pos, vehicles[i]._pos);
         diff.normalize();
         diff.div(d);
         sum.add(diff);
@@ -103,22 +98,22 @@ class Vehicle {
     if (count > 0) {
       sum.div(count);
       sum.normalize();
-      sum.mult(maxSpeed);
-      PVector steer = PVector.sub(sum, vel);
-      steer.limit(maxForce);
+      sum.mult(_maxSpeed);
+      PVector steer = PVector.sub(sum, _vel);
+      steer.limit(_maxForce);
       return steer;
     } else {
       return  new PVector(0, 0);
     }
   }
 
-  PVector align(Vehicle[] vehicles) {
+  PVector align(Vehicle[] vehicles, int populationSize) {
     PVector sum = new PVector(0, 0);
     int count = 0;
-    for (int i = 0; i < vehicles.length; i++) {
-      float d = PVector.dist(this.pos, vehicles[i].pos);
-      if ((d > 0) && (d < this.swarmDistance)) {
-        sum.add(vehicles[i].vel);
+    for (int i = 0; i < populationSize; i++) {
+      float d = PVector.dist(this._pos, vehicles[i]._pos);
+      if ((d > 0) && (d < this._swarmDistance)) {
+        sum.add(vehicles[i]._vel);
         count++;
       }
     }
@@ -126,9 +121,9 @@ class Vehicle {
     if (count > 0) {
       sum.div(count);
       sum.normalize();
-      sum.mult(maxSpeed);
-      PVector steer = PVector.sub(sum, vel);
-      steer.limit(maxForce);
+      sum.mult(_maxSpeed);
+      PVector steer = PVector.sub(sum, _vel);
+      steer.limit(_maxForce);
       return steer;
     } else {
       return new PVector(0, 0);
@@ -136,13 +131,13 @@ class Vehicle {
   }
 
   // seek in a swarm
-  PVector cohesion(Vehicle[] vehicles) {
+  PVector cohesion(Vehicle[] vehicles, int populationSize) {
     PVector sum = new PVector(0, 0);
     int count = 0;
-    for (int i = 0; i < vehicles.length; i++) {
-      float d = PVector.dist(pos, vehicles[i].pos);
-      if ((d > 0) && (d < this.desiredDistance)) {
-        sum.add(vehicles[i].pos);
+    for (int i = 0; i < populationSize; i++) {
+      float d = PVector.dist(_pos, vehicles[i]._pos);
+      if ((d > 0) && (d < this._desiredDistance)) {
+        sum.add(vehicles[i]._pos);
         count++;
       }
     }
@@ -156,19 +151,19 @@ class Vehicle {
   }
   
   PVector seek(PVector target) {
-    PVector desired = PVector.sub(target, pos);
+    PVector desired = PVector.sub(target, _pos);
 
     // the arrive behavior
     float d = desired.mag();
     if (d < 100) {
-      float m = map(d, 0, 100, 0, maxSpeed);
+      float m = map(d, 0, 100, 0, _maxSpeed);
       desired.setMag(m);
     } else {
-      desired.setMag(maxSpeed);
+      desired.setMag(_maxSpeed);
     }
 
-    PVector steering = PVector.sub(desired, vel);
-    steering.limit(maxForce);
+    PVector steering = PVector.sub(desired, _vel);
+    steering.limit(_maxForce);
     return steering;
   }
   
@@ -179,7 +174,7 @@ class Vehicle {
   }
 
   void drawMe(int groupCount, int intensity) {
-    float theta = vel.heading() + PI / 2;
+    float theta = _vel.heading() + PI / 2;
     color myColor = color(intensity,0,0);
     if (groupCount > 1) {myColor = color (0,intensity,0);} // member of group
     if (groupCount > 7) {myColor = color(0,0,intensity);} // member of swarm
@@ -187,12 +182,12 @@ class Vehicle {
     stroke(myColor);
     strokeWeight(1);
     pushMatrix();
-    translate(pos.x, pos.y);
+    translate(_pos.x, _pos.y);
     rotate(theta);
     beginShape();
-    vertex(0, -size*2);
-    vertex(-size, size * 2);
-    vertex(size, size*2);
+    vertex(0, -_size*2);
+    vertex(-_size, _size * 2);
+    vertex(_size, _size*2);
     endShape(CLOSE);
     popMatrix();
   }

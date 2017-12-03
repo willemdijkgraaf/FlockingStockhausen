@@ -1,5 +1,3 @@
-import java.util.LinkedList;
-
 int _clock;
 int _groupMembershipUpdateRate;
 Vehicles _vehicles;
@@ -10,15 +8,15 @@ void setup() {
   frameRate(40);
 
   _groupMembershipUpdateRate = 10;
-  int amount = 100;
+  int initialPopulationSize = 50;
   float swarmDistance = 50;
   float desiredDistance = 30;
-  _vehicles = new Vehicles(amount, swarmDistance, desiredDistance);
+  _vehicles = new Vehicles(initialPopulationSize, swarmDistance, desiredDistance);
 }
 
 void draw() {
   if (mousePressed) {
-    return;
+    _vehicles.setPopulationSize(_vehicles._populationSize+10);
   }
   
   _clock++;
