@@ -6,13 +6,14 @@ class Vehicles {
   int _maxPopulationSize = 1000;
   int _populationSize;
   float _desiredDistance;
-
-  Vehicles(int intitialPopulationSize, float swarmDistance, float desiredDistance ) {
+  Margins _margins;
+  
+  Vehicles(int intitialPopulationSize, float swarmDistance, float desiredDistance, Margins margins ) {
     _populationSize = intitialPopulationSize;
     _swarmDistance = swarmDistance;
     _swarmDistance = swarmDistance;
     _desiredDistance = desiredDistance;
-
+    _margins = margins;
     _vehicles = new Vehicle[_maxPopulationSize];
     _groupSizes = new int[_maxPopulationSize];
 
@@ -26,7 +27,7 @@ class Vehicles {
       float maxSpeed = random(2, 4);
       float maxForce = random(0.75, 1.25);
       float mass = 1.0;
-      _vehicles[i] = new Vehicle(x, y, maxSpeed, maxForce, mass, _desiredDistance, _swarmDistance);
+      _vehicles[i] = new Vehicle(x, y, maxSpeed, maxForce, mass, _desiredDistance, _swarmDistance, _margins);
     }
   }
   

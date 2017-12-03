@@ -8,12 +8,20 @@ class Vehicle {
   float _maxForce;
   float _desiredDistance;
   float _swarmDistance;
+  Margins _margins;
   
   int groupId;
   
-  float marginTop, marginRight, marginBottom, marginLeft;
-  
-  Vehicle(float x, float y, float ms, float mf, float mss, float desDistance, float swmDistance) {
+  Vehicle(
+    float x, 
+    float y, 
+    float ms, 
+    float mf, 
+    float mss, 
+    float desDistance, 
+    float swmDistance,
+    Margins margins
+  ) {
     _pos = new PVector(x, y);
     _vel = new PVector(0, 0);
     _acc = new PVector(0, 0);
@@ -23,11 +31,7 @@ class Vehicle {
     this._size = this._mass * 4;
     this._desiredDistance = desDistance;
     this._swarmDistance = swmDistance;
-    
-    marginTop = 2 * _size;
-    marginBottom = height - 2 * _size;
-    marginLeft = 2* _size;
-    marginRight = width - 2 * _size;
+    this._margins = margins;
   }
   
   void applyBehaviors(Vehicle[] vehicles, int populationSize) {
@@ -60,19 +64,19 @@ class Vehicle {
   void borders() {
     
     // bounce of the borders
-    if (this._pos.x < marginLeft) {
+    if (this._pos.x < _margins.getLeft()) {
       this._vel.x = this._vel.x * -1.0;
       this._pos.x = this._pos.x + _size;
     }
-    if (this._pos.y < marginTop) {
+    if (this._pos.y < _margins.getTop()) {
       this._vel.y = this._vel.y * -1.0;
       this._pos.y = this._pos.y + _size;
     }
-    if (this._pos.x > marginRight) {
+    if (this._pos.x > _margins.getRight()) {
       this._vel.x = this._vel.x * -1.0;
       this._pos.x = this._pos.x - _size;
     }
-    if (this._pos.y > marginBottom) {
+    if (this._pos.y > _margins.getBottom()) {
       this._vel.y = this._vel.x * -1.0;
       this._pos.y = this._pos.y - _size;
     }
