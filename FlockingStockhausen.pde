@@ -37,5 +37,6 @@ void draw() {
   }
 
   background(60);
+  _margins.draw();
   _vehicles.draw();
 }
