@@ -1,5 +1,6 @@
 import oscP5.*;
-OscP5 _oscP5;
+OscP5 _oscReceive;
+OscP5 _oscSend;
 
 int _clock;
 int _groupMembershipUpdateRate;
@@ -11,20 +12,24 @@ void setup() {
   size(1280, 720);
   frameRate(40);
 
-  _groupMembershipUpdateRate = 10;
-  int initialPopulationSize = 0;
-  float swarmDistance = 50;
-  float desiredDistance = 30;
-
-
   float marginTop = 2 * 4;
   float marginBottom = height - 2 * 4;
   float marginLeft = 2* 4;
   float marginRight = width - 2 * 4;
   _margins = new Margins(marginTop, marginRight, marginBottom, marginLeft);
-  _vehicles = new Vehicles(initialPopulationSize, swarmDistance, desiredDistance, _margins);
+  
+  _groupMembershipUpdateRate = 10;
+  
+  _oscReceive = new OscP5(this, 10001);
+  _oscSend = new OscP5(this, 57120);
+  Synth synth = new Synth(_oscSend);
+  int initialPopulationSize = 0;
+  float swarmDistance = 50;
+  float desiredDistance = 30;
+  _vehicles = new Vehicles(initialPopulationSize, swarmDistance, desiredDistance, _margins, synth);
 
-  _oscP5 = new OscP5(this, 10001);
+  _oscReceive = new OscP5(this, 10001);
+  _oscSend = new OscP5(this, 57120);
 }
 
 void draw() {

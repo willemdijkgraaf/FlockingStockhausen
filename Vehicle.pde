@@ -1,4 +1,6 @@
 class Vehicle {
+  Synth _synth;
+  int _id;
   float _mass;
   PVector _pos;
   PVector _vel;
@@ -13,6 +15,7 @@ class Vehicle {
   int groupId;
   
   Vehicle(
+    int id,
     float x, 
     float y, 
     float ms, 
@@ -20,8 +23,10 @@ class Vehicle {
     float mss, 
     float desDistance, 
     float swmDistance,
-    Margins margins
+    Margins margins,
+    Synth synth
   ) {
+    _id = id;
     _pos = new PVector(x, y);
     _vel = new PVector(0, 0);
     _acc = new PVector(0, 0);
@@ -32,6 +37,7 @@ class Vehicle {
     this._desiredDistance = desDistance;
     this._swarmDistance = swmDistance;
     this._margins = margins;
+    this._synth = synth;
   }
   
   void applyBehaviors(Vehicle[] vehicles, int populationSize) {
