@@ -22,8 +22,8 @@ class Vehicles {
   
   void initPopulation(int low, int amount){
     for (int i = low; i < low + amount; i++) {
-      float x = random(width);
-      float y = random(height);
+      float x = random(_margins.getLeft(), _margins.getRight());
+      float y = random(_margins.getTop(), _margins.getBottom());
       float maxSpeed = random(2, 4);
       float maxForce = random(0.75, 1.25);
       float mass = 1.0;
