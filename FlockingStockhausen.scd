@@ -2,11 +2,11 @@
 (
 ~population = 0;
 ~p3 = NetAddr.new("127.0.0.1", 10001);    // create the NetAddr for the processing sketch
-~p3.sendMsg("/P3/AreaX", ~population, 0);
+~p3.sendMsg("/P3/AreaX", ~population, 10);
 ~p3.sendMsg("/P3/AreaWidth", ~population, 200);
-~p3.sendMsg("/P3/AreaY",~population, 0);
-~p3.sendMsg("/P3/AreaHeight", ~population, 200);
-~p3.sendMsg("/P3/PopulationSize", ~population, 0);
+~p3.sendMsg("/P3/AreaY",~population, 160);
+~p3.sendMsg("/P3/AreaHeight", ~population, 50);
+~p3.sendMsg("/P3/PopulationSize", ~population, 1);
 
 ~p3.sendMsg("/P3/FrameRate", 60);
 )
