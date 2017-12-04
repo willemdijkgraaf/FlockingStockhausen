@@ -6,7 +6,6 @@ OscP5 _osc;
 
 int _clock;
 int _groupMembershipUpdateRate;
-Area _margins;
 Population[] _populations = new Population[2];
 
 void setup() {
@@ -22,7 +21,7 @@ void setup() {
   _osc = new OscP5(this, 10001);
   Synth synth = new Synth(_osc, remoteLocation);
   
-  int initialPopulationSize = 50;
+  int initialPopulationSize = 0;
   float swarmDistance = 50;
   float desiredDistance = 30;
   
@@ -30,15 +29,15 @@ void setup() {
   float h = (height - 10);
   float x = 5;
   float w = (width/2) - 10;
-  _margins = new Area(x,y,w,h);
-  _populations[0] = new Population(0, initialPopulationSize, swarmDistance, desiredDistance, _margins, synth);
+  Area area = new Area(x,y,w,h);
+  _populations[0] = new Population(0, initialPopulationSize, swarmDistance, desiredDistance, area, synth);
  
   y = 5;
   h = (height - 10);
   x = (width/2);
   w = (width/2) - 10;
-  _margins = new Area(x,y,w,h);
-  _populations[1] = new Population(1, initialPopulationSize, swarmDistance, desiredDistance, _margins, synth);
+  area = new Area(x,y,w,h);
+  _populations[1] = new Population(1, initialPopulationSize, swarmDistance, desiredDistance, area, synth);
 }
 
 void draw() {
@@ -64,7 +63,7 @@ void draw() {
 
 void oscEvent(OscMessage theOscMessage) {
   // Left Margin
-  if (theOscMessage.checkAddrPattern("/P3/AreaX") && theOscMessage.checkTypetag("i") ) {
+  if (theOscMessage.checkAddrPattern("/P3/AreaX") && theOscMessage.checkTypetag("ii") ) {
     int populationId = theOscMessage.get(0).intValue();
     int x = theOscMessage.get(1).intValue();
     _populations[populationId]._area.setX(x);
@@ -72,7 +71,7 @@ void oscEvent(OscMessage theOscMessage) {
   }
   
   // Right Margin
-  if (theOscMessage.checkAddrPattern("/P3/AreaWidth") && theOscMessage.checkTypetag("i") ) {
+  if (theOscMessage.checkAddrPattern("/P3/AreaWidth") && theOscMessage.checkTypetag("ii") ) {
     int populationId = theOscMessage.get(0).intValue();
     int myWidth = theOscMessage.get(1).intValue();
     _populations[populationId]._area.setWidth(myWidth);
@@ -80,7 +79,7 @@ void oscEvent(OscMessage theOscMessage) {
   }
   
   // Top Margin
-  if (theOscMessage.checkAddrPattern("/P3/AreaY") && theOscMessage.checkTypetag("i") ) {
+  if (theOscMessage.checkAddrPattern("/P3/AreaY") && theOscMessage.checkTypetag("ii") ) {
     int populationId = theOscMessage.get(0).intValue();
     int y = theOscMessage.get(1).intValue();
     _populations[populationId]._area.setY(y);
@@ -88,7 +87,7 @@ void oscEvent(OscMessage theOscMessage) {
   }
   
   // Bottom Margin
-  if (theOscMessage.checkAddrPattern("/P3/AreaHeight") && theOscMessage.checkTypetag("i") ) {
+  if (theOscMessage.checkAddrPattern("/P3/AreaHeight") && theOscMessage.checkTypetag("ii") ) {
     int populationId = theOscMessage.get(0).intValue();
     int myHeight = theOscMessage.get(1).intValue();
     _populations[populationId]._area.setHeight(myHeight);
@@ -96,10 +95,11 @@ void oscEvent(OscMessage theOscMessage) {
   }
   
   // Population size
-  if (theOscMessage.checkAddrPattern("/P3/PopulationSize") && theOscMessage.checkTypetag("i") ) {
+  if (theOscMessage.checkAddrPattern("/P3/PopulationSize") && theOscMessage.checkTypetag("ii") ) {
     int populationId = theOscMessage.get(0).intValue();
     int populationSize = theOscMessage.get(1).intValue();
     _populations[populationId].setPopulationSize(populationSize);
+    println(populationId + " " + populationSize);
     return;
   }
   

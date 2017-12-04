@@ -32,12 +32,12 @@ class Population {
   
   void initPopulation(int low, int amount){
     for (int i = low; i < low + amount; i++) {
-      float x = random(_margins.getPositionLeft(), _margins.getPositionRight());
-      float y = random(_margins.getPositionTop(), _margins.getPositionBottom());
+      float x = random(_area.getPositionLeft(), _area.getPositionRight());
+      float y = random(_area.getPositionTop(), _area.getPositionBottom());
       float maxSpeed = random(2, 4);
       float maxForce = random(0.75, 1.25);
       float mass = 1.0;
-      _vehicles[i] = new Vehicle(i*_id, x, y, maxSpeed, maxForce, mass, _desiredDistance, _swarmDistance, _margins, _synth);
+      _vehicles[i] = new Vehicle(i*_id, x, y, maxSpeed, maxForce, mass, _desiredDistance, _swarmDistance, _area, _synth);
       _synth.createSynth(i);
     }
   }
