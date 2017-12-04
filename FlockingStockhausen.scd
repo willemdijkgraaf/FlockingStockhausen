@@ -2,10 +2,10 @@
 (
 ~p3 = NetAddr.new("127.0.0.1", 10001);    // create the NetAddr for the processing sketch
 ~p3.sendMsg("/P3/LeftMargin", 0);
-~p3.sendMsg("/P3/RightMargin", 400);
-~p3.sendMsg("/P3/TopMargin",10);
-~p3.sendMsg("/P3/BottomMargin", 20);
-~p3.sendMsg("/P3/PopulationSize", 20);
+~p3.sendMsg("/P3/RightMargin", 200);
+~p3.sendMsg("/P3/TopMargin",680);
+~p3.sendMsg("/P3/BottomMargin", 700);
+~p3.sendMsg("/P3/PopulationSize", 0);
 
 ~p3.sendMsg("/P3/FrameRate", 60);
 )
@@ -34,15 +34,27 @@ OSCFunc.trace(false); // Turn posting off
 (
 ~synths = Array.newClear(1000);
 
-SynthDef("starting-SinOsc",
+SynthDef("point-synth",
 	{
 		arg freq = 440, amp = 0.0;
 		Out.ar(0, [SinOsc.ar(freq, 0, amp), SinOsc.ar(freq, 0, amp)])
 }).send;
 
+SynthDef("group-synth",
+	{
+		arg freq = 440, amp = 0.0;
+		Out.ar(0, [SawDPW.ar(freq, 0, amp), SawDPW.ar(freq, 0, amp)])
+}).send;
+
+SynthDef("mass-synth",
+	{
+		arg freq = 440, amp = 0.0;
+		Out.ar(0, [PulseDPW.ar(freq, 0.1, amp), PulseDPW.ar(freq, 0.9, amp)])
+}).send;
+
 ~createSynth = {
 	arg id;
-	~synths.put(id, Synth("starting-SinOsc"));
+	~synths.put(id, Synth("point-synth"));
 };
 
 ~adjustSynth = {
@@ -54,9 +66,23 @@ SynthDef("starting-SinOsc",
 	arg id;
 	~synths[id].free;
 };
+
+~changeSynth = {
+	arg id, type;
+	~synths[id].free;
+	switch (type,
+		0,   { ~synths.put(id, Synth("point-synth")); },
+		1, { ~synths.put(id, Synth("group-synth"));},
+		2, { ~synths.put(id, Synth("mass-synth")); },
+	);
+};
+
 ~oscCreateSynth = OSCdef.newMatching(\SCCreateSynth, { arg msg, time, addr, recvPort; ~createSynth.value(msg[1]);}, "/SC/CreateSynth");
+~oscChangeSynth = OSCdef.newMatching(\SCChangeSynth, { arg msg, time, addr, recvPort; ~changeSynth.value(msg[1],msg[2]);}, "/SC/ChangeSynth");
 ~oscAdjustSynth= OSCdef.newMatching(\SCAdjustSynth, { arg msg, time, addr, recvPort; ~adjustSynth.value(msg[1], msg[2], msg[3]);}, "/SC/AdjustSynth");
 ~oscFreeSynth= OSCdef.newMatching(\SCFreeSynth, { arg msg, time, addr, recvPort; ~freeSynth.value(msg[1]);}, "/SC/FreeSynth");
+
+
 )
 
 ~oscCreateSynth.free;

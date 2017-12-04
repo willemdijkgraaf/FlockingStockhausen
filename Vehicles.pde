@@ -89,7 +89,7 @@ class Vehicles {
   }
 
   void setGroupMembership (int member) {
-    if (_vehicles[member].groupId > 0) return;
+    if (_vehicles[member].groupId > 0) return; // is already a member of a group
     _lastGroupId++;
     setGroupIds(member, _lastGroupId);
   }
@@ -97,15 +97,17 @@ class Vehicles {
   void draw() {
     for (int i = 0; i < _populationSize; i++) {
       _vehicles[i].applyBehaviors(_vehicles, _populationSize);
-      float groupSize = 0;
+      int groupSize = 0;
       if (_vehicles[i].groupId > 0) {
         groupSize = _groupSizes[_vehicles[i].groupId];
+        
       }
+      _vehicles[i].setGroupSize(groupSize);
       float groupIntensity = 255;
       if (groupSize > 1) {
         groupIntensity = map(((float)groupSize/_populationSize), 0, 1, 127, 255 );
       }
-      _vehicles[i].display((int)groupSize, (int)groupIntensity);
+      _vehicles[i].display(groupSize, (int)groupIntensity);
     }
   }
 }

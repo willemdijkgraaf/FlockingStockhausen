@@ -13,6 +13,8 @@ class Vehicle {
   Margins _margins;
   
   int groupId;
+  int _groupType;
+  int _previousGroupType;
   
   Vehicle(
     int id,
@@ -177,6 +179,16 @@ class Vehicle {
     return steering;
   }
   
+  void setGroupSize(int size) {
+    _previousGroupType = _groupType;
+    if (size > 7) {_groupType = 2;} // mass
+    else if (size > 1) {_groupType = 1;} // group
+    else {_groupType = 0;} // point
+    
+    if (_groupType != _previousGroupType) {
+      _synth.changeSynth(_id, _groupType);
+    }
+  }
   public void display(int groupCount, int groupIntensity) {
     update();
     borders();

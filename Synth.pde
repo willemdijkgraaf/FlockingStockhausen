@@ -32,4 +32,11 @@ class Synth {
       _osc.send(message, _remoteLocation); 
     }
   }
+  
+  void changeSynth(int id, int type) {
+    OscMessage message = new OscMessage("/SC/ChangeSynth");
+    message.add(id);
+    message.add(type);
+    _osc.send(message, _remoteLocation); 
+  }
 }
