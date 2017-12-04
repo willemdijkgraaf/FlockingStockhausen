@@ -1,11 +1,11 @@
 // OSC SEND
 (
 ~p3 = NetAddr.new("127.0.0.1", 10001);    // create the NetAddr for the processing sketch
-~p3.sendMsg("/P3/LeftMargin", 0);
-~p3.sendMsg("/P3/RightMargin", 200);
-~p3.sendMsg("/P3/TopMargin",680);
-~p3.sendMsg("/P3/BottomMargin", 700);
-~p3.sendMsg("/P3/PopulationSize", 0);
+~p3.sendMsg("/P3/LeftMargin", 0, 0);
+~p3.sendMsg("/P3/RightMargin", 0, 200);
+~p3.sendMsg("/P3/TopMargin",0, 680);
+~p3.sendMsg("/P3/BottomMargin", 0, 700);
+~p3.sendMsg("/P3/PopulationSize", 0, 0);
 
 ~p3.sendMsg("/P3/FrameRate", 60);
 )

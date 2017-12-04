@@ -1,21 +1,24 @@
-class Vehicles {
+class Population {
+  int _id;
   Synth _synth;
   Vehicle[] _vehicles;
   int[] _groupSizes;
   int _lastGroupId;
   float _swarmDistance;
-  int _maxPopulationSize = 1000;
+  int _maxPopulationSize = 500;
   int _populationSize;
   float _desiredDistance;
   Margins _margins;
   
-  Vehicles(
+  Population(
+    int id,
     int intitialPopulationSize, 
     float swarmDistance, 
     float desiredDistance, 
     Margins margins,
     Synth synth) 
   {
+    _id = id;
     _populationSize = intitialPopulationSize;
     _swarmDistance = swarmDistance;
     _swarmDistance = swarmDistance;
@@ -34,7 +37,7 @@ class Vehicles {
       float maxSpeed = random(2, 4);
       float maxForce = random(0.75, 1.25);
       float mass = 1.0;
-      _vehicles[i] = new Vehicle(i, x, y, maxSpeed, maxForce, mass, _desiredDistance, _swarmDistance, _margins, _synth);
+      _vehicles[i] = new Vehicle(i*_id, x, y, maxSpeed, maxForce, mass, _desiredDistance, _swarmDistance, _margins, _synth);
       _synth.createSynth(i);
     }
   }
