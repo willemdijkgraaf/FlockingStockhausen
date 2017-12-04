@@ -6,7 +6,7 @@ OscP5 _osc;
 
 int _clock;
 int _groupMembershipUpdateRate;
-Margins _margins;
+Area _margins;
 Population[] _populations = new Population[2];
 
 void setup() {
@@ -26,18 +26,18 @@ void setup() {
   float swarmDistance = 50;
   float desiredDistance = 30;
   
-  float marginTop = 2 * 4;
-  float marginBottom = (height/2) - 2 * 4;
-  float marginLeft = 2* 4;
-  float marginRight = (width/2) - 2 * 4;
-  _margins = new Margins(marginTop, marginRight, marginBottom, marginLeft);
+  float y = 5;
+  float h = (height - 10);
+  float x = 5;
+  float w = (width/2) - 10;
+  _margins = new Area(x,y,w,h);
   _populations[0] = new Population(0, initialPopulationSize, swarmDistance, desiredDistance, _margins, synth);
  
-  marginTop = (height/2) - 2 * 4;
-  marginBottom = (height) - 2 * 4;
-  marginLeft = (width/2) - 2* 4;
-  marginRight = (width) - 2 * 4;
-  _margins = new Margins(marginTop, marginRight, marginBottom, marginLeft);
+  y = 5;
+  h = (height - 10);
+  x = (width/2);
+  w = (width/2) - 10;
+  _margins = new Area(x,y,w,h);
   _populations[1] = new Population(1, initialPopulationSize, swarmDistance, desiredDistance, _margins, synth);
 }
 
@@ -56,7 +56,7 @@ void draw() {
   background(60);
 
   for (Population population : _populations) {
-      population._margins.draw();
+      population._area.draw();
       population.draw();
     }
   
@@ -64,34 +64,34 @@ void draw() {
 
 void oscEvent(OscMessage theOscMessage) {
   // Left Margin
-  if (theOscMessage.checkAddrPattern("/P3/LeftMargin") && theOscMessage.checkTypetag("i") ) {
+  if (theOscMessage.checkAddrPattern("/P3/AreaX") && theOscMessage.checkTypetag("i") ) {
     int populationId = theOscMessage.get(0).intValue();
-    int leftMargin = theOscMessage.get(1).intValue();
-    _populations[populationId]._margins.setLeft(leftMargin);
+    int x = theOscMessage.get(1).intValue();
+    _populations[populationId]._area.setX(x);
     return;
   }
   
   // Right Margin
-  if (theOscMessage.checkAddrPattern("/P3/RightMargin") && theOscMessage.checkTypetag("i") ) {
+  if (theOscMessage.checkAddrPattern("/P3/AreaWidth") && theOscMessage.checkTypetag("i") ) {
     int populationId = theOscMessage.get(0).intValue();
-    int rightMargin = theOscMessage.get(1).intValue();
-    _populations[populationId]._margins.setRight(rightMargin);
+    int myWidth = theOscMessage.get(1).intValue();
+    _populations[populationId]._area.setWidth(myWidth);
     return;
   }
   
   // Top Margin
-  if (theOscMessage.checkAddrPattern("/P3/TopMargin") && theOscMessage.checkTypetag("i") ) {
+  if (theOscMessage.checkAddrPattern("/P3/AreaY") && theOscMessage.checkTypetag("i") ) {
     int populationId = theOscMessage.get(0).intValue();
-    int topMargin = theOscMessage.get(1).intValue();
-    _populations[populationId]._margins.setTop(topMargin);
+    int y = theOscMessage.get(1).intValue();
+    _populations[populationId]._area.setY(y);
     return;
   }
   
   // Bottom Margin
-  if (theOscMessage.checkAddrPattern("/P3/BottomMargin") && theOscMessage.checkTypetag("i") ) {
+  if (theOscMessage.checkAddrPattern("/P3/AreaHeight") && theOscMessage.checkTypetag("i") ) {
     int populationId = theOscMessage.get(0).intValue();
-    int bottomMargin = theOscMessage.get(1).intValue();
-    _populations[populationId]._margins.setBottom(bottomMargin);
+    int myHeight = theOscMessage.get(1).intValue();
+    _populations[populationId]._area.setHeight(myHeight);
     return;
   }
   

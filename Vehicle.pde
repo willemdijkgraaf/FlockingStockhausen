@@ -10,7 +10,7 @@ class Vehicle {
   float _maxForce;
   float _desiredDistance;
   float _swarmDistance;
-  Margins _margins;
+  Area _area;
   
   int groupId;
   int _groupType;
@@ -25,7 +25,7 @@ class Vehicle {
     float mss, 
     float desDistance, 
     float swmDistance,
-    Margins margins,
+    Area area,
     Synth synth
   ) {
     _id = id;
@@ -38,7 +38,7 @@ class Vehicle {
     this._size = this._mass * 4;
     this._desiredDistance = desDistance;
     this._swarmDistance = swmDistance;
-    this._margins = margins;
+    this._area = area;
     this._synth = synth;
   }
   
@@ -72,19 +72,19 @@ class Vehicle {
   void borders() {
     
     // bounce of the borders
-    if (this._pos.x < _margins.getLeft()) {
+    if (this._pos.x < this._area.getPositionLeft()) {
       this._vel.x = this._vel.x * -1.0;
       this._pos.x = this._pos.x + _size;
     }
-    if (this._pos.y < _margins.getTop()) {
+    if (this._pos.y < this._area.getPositionTop()) {
       this._vel.y = this._vel.y * -1.0;
       this._pos.y = this._pos.y + _size;
     }
-    if (this._pos.x > _margins.getRight()) {
+    if (this._pos.x > this._area.getPositionRight()) {
       this._vel.x = this._vel.x * -1.0;
       this._pos.x = this._pos.x - _size;
     }
-    if (this._pos.y > _margins.getBottom()) {
+    if (this._pos.y > this._area.getPositionBottom()) {
       this._vel.y = this._vel.x * -1.0;
       this._pos.y = this._pos.y - _size;
     }

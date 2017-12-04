@@ -8,14 +8,14 @@ class Population {
   int _maxPopulationSize = 500;
   int _populationSize;
   float _desiredDistance;
-  Margins _margins;
+  Area _area;
   
   Population(
     int id,
     int intitialPopulationSize, 
     float swarmDistance, 
     float desiredDistance, 
-    Margins margins,
+    Area area,
     Synth synth) 
   {
     _id = id;
@@ -23,7 +23,7 @@ class Population {
     _swarmDistance = swarmDistance;
     _swarmDistance = swarmDistance;
     _desiredDistance = desiredDistance;
-    _margins = margins;
+    _area = area;
     _vehicles = new Vehicle[_maxPopulationSize];
     _groupSizes = new int[_maxPopulationSize];
     _synth = synth;
@@ -32,8 +32,8 @@ class Population {
   
   void initPopulation(int low, int amount){
     for (int i = low; i < low + amount; i++) {
-      float x = random(_margins.getLeft(), _margins.getRight());
-      float y = random(_margins.getTop(), _margins.getBottom());
+      float x = random(_margins.getPositionLeft(), _margins.getPositionRight());
+      float y = random(_margins.getPositionTop(), _margins.getPositionBottom());
       float maxSpeed = random(2, 4);
       float maxForce = random(0.75, 1.25);
       float mass = 1.0;
