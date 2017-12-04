@@ -6,7 +6,7 @@
 ~p3.sendMsg("/P3/AreaWidth", ~population, 200);
 ~p3.sendMsg("/P3/AreaY",~population, 160);
 ~p3.sendMsg("/P3/AreaHeight", ~population, 50);
-~p3.sendMsg("/P3/PopulationSize", ~population, 1);
+~p3.sendMsg("/P3/PopulationSize", ~population, 40);
 
 ~p3.sendMsg("/P3/FrameRate", 60);
 )
