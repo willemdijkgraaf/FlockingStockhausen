@@ -25,10 +25,10 @@
 // TEMPORAL FUNCTION TO SET POPULATION SIZE
 (
 ~populationGrowth = {
-	arg start, finish, step, totalTime;
+	arg start, finish, step, period;
 	var time, steps, p3;
 
-	time = totalTime/((finish - start)/step);
+	time = period/((finish - start)/step);
 	p3 = NetAddr.new("127.0.0.1", 10001);
 
 	Routine(
@@ -43,7 +43,7 @@
 })};
 )
 
-TempoClock.default.sched(0, ~populationGrowth.value(start:0, finish:0, step:1, totalTime:2));
+TempoClock.default.sched(0, ~populationGrowth.value(start:0, finish:0, step:1, period:2));
 ~populationGrowth.stop;
 
 // OSC RECEIVE
