@@ -6,7 +6,9 @@ OscP5 _osc;
 
 int _clock;
 int _groupMembershipUpdateRate;
-Population[] _populations = new Population[2];
+Synth _synth;
+
+Population[] _populations = new Population[0];
 
 void setup() {
 
@@ -19,7 +21,7 @@ void setup() {
   
   NetAddress remoteLocation = new NetAddress("127.0.0.1",57120);
   _osc = new OscP5(this, 10001);
-  Synth synth = new Synth(_osc, remoteLocation);
+  _synth = new Synth(_osc, remoteLocation);
   
   int initialPopulationSize = 0;
   float swarmDistance = 50;
@@ -30,14 +32,22 @@ void setup() {
   float x = 5;
   float w = (width/2) - 10;
   Area area = new Area(x,y,w,h);
-  _populations[0] = new Population(0, initialPopulationSize, swarmDistance, desiredDistance, area, synth);
+  createPopulation(initialPopulationSize, swarmDistance, desiredDistance, area);
  
   y = 5;
   h = (height - 10);
   x = (width/2);
   w = (width/2) - 10;
   area = new Area(x,y,w,h);
-  _populations[1] = new Population(1, initialPopulationSize, swarmDistance, desiredDistance, area, synth);
+  createPopulation(initialPopulationSize, swarmDistance, desiredDistance, area);
+}
+
+void createPopulation(int populationSize, float swarmDistance, float desiredDistance, Area area){
+  int newLength = _populations.length + 1;
+  int id = _populations.length;
+  Population population = new Population(id, populationSize, swarmDistance, desiredDistance, area, _synth);
+  _populations = (Population[])expand(_populations, newLength);
+  _populations[id] = population;
 }
 
 void draw() {
@@ -108,6 +118,21 @@ void oscEvent(OscMessage theOscMessage) {
     int rate = theOscMessage.get(0).intValue();
     if (rate > 60) return;
     frameRate(rate);
+    return;
+  }
+  
+  // Create population
+  if (theOscMessage.checkAddrPattern("/P3/CreatePopulation") && theOscMessage.checkTypetag("iiiiiii") ) {
+    int populationSize = theOscMessage.get(0).intValue();
+    int swarmDistance = theOscMessage.get(1).intValue();
+    int desiredDistance = theOscMessage.get(2).intValue();
+    int areaX = theOscMessage.get(3).intValue();
+    int areaY = theOscMessage.get(4).intValue();
+    int areaWidth = theOscMessage.get(5).intValue();
+    int areaHeight = theOscMessage.get(6).intValue();
+    
+    Area area = new Area(areaX, areaY, areaWidth, areaHeight);
+    createPopulation(populationSize, (float)swarmDistance, (float)desiredDistance, area);
     return;
   }
 }

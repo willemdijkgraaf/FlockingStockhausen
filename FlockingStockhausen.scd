@@ -1,14 +1,25 @@
 // OSC SEND
 (
+~size = 10;
+~swarmDistance = 50; // default 50
+~desiredDistance = 30; // default 30
+~areaX = 0;
+~areaY = 0;
+~areaWidth = 10;
+~areaHeight = 10;
+
 ~population = 0;
+
+
 ~p3 = NetAddr.new("127.0.0.1", 10001);    // create the NetAddr for the processing sketch
 ~p3.sendMsg("/P3/AreaX", ~population, 10);
 ~p3.sendMsg("/P3/AreaWidth", ~population, 200);
-~p3.sendMsg("/P3/AreaY",~population, 160);
-~p3.sendMsg("/P3/AreaHeight", ~population, 50);
-~p3.sendMsg("/P3/PopulationSize", ~population, 40);
+~p3.sendMsg("/P3/AreaY",~population, 560);
+~p3.sendMsg("/P3/AreaHeight", ~population, 150);
+~p3.sendMsg("/P3/PopulationSize", ~population, 0);
+~p3.sendMsg("/P3/CreatePopulation", ~size, ~swarmDistance, ~desiredDistance, ~areaX, ~areaY, ~areaWidth, ~areaHeight);
 
-~p3.sendMsg("/P3/FrameRate", 60);
+~p3.sendMsg("/P3/FrameRate", 20);
 )
 
 // TEMPORAL FUNCTION TO SET POPULATION SIZE
@@ -33,7 +44,7 @@ OSCFunc.trace(true); // Turn posting on
 OSCFunc.trace(false); // Turn posting off
 
 (
-~synths = Array.newClear(1000);
+~synths = Array.newClear(4000);
 
 SynthDef("point-synth",
 	{
