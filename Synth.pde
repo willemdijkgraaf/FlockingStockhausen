@@ -26,7 +26,7 @@ class Synth {
   
   void stopRange(int lowId, int amount) {
     int upper = lowId + amount;
-    for (int i = lowId; i < upper; i++) {
+    for (int i = lowId; i <= upper; i++) {
       OscMessage message = new OscMessage("/SC/FreeSynth");
       message.add(i);
       _osc.send(message, _remoteLocation); 

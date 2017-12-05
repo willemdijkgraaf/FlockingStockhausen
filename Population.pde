@@ -5,7 +5,7 @@ class Population {
   int[] _groupSizes;
   int _lastGroupId;
   float _swarmDistance;
-  int _maxPopulationSize = 500;
+  final int _maxPopulationSize = 500;
   int _populationSize;
   float _desiredDistance;
   Area _area;
@@ -37,8 +37,11 @@ class Population {
       float maxSpeed = random(2, 4);
       float maxForce = random(0.75, 1.25);
       float mass = 1.0;
-      _vehicles[i] = new Vehicle(i*_id, x, y, maxSpeed, maxForce, mass, _desiredDistance, _swarmDistance, _area, _synth);
-      _synth.createSynth(i);
+      int synthId = this._id * _maxPopulationSize + i;
+      _vehicles[i] = new Vehicle(i, synthId, x, y, maxSpeed, maxForce, mass, _desiredDistance, _swarmDistance, _area, _synth);
+      
+      _synth.createSynth(synthId);
+      println("create start: " + synthId + " amount: " + amount);
     }
   }
   
@@ -46,12 +49,18 @@ class Population {
     if (populationSize > _maxPopulationSize) return;
     
     if (populationSize > _populationSize) {
-      int size = populationSize - _populationSize;
-      initPopulation(_populationSize, size);
+      int amount = populationSize - _populationSize;
+      int startId = _populationSize;
+      initPopulation(startId, amount);
     }
     
     if (populationSize < _populationSize) {
-      _synth.stopRange(populationSize, _populationSize - populationSize);
+      int index = populationSize-1;
+      if (index < 0) index = 0;
+      int synthId = _vehicles[index]._synthId;
+      int amount = _populationSize - populationSize;
+      println("remove start: " + synthId + " amount: " + amount);
+      _synth.stopRange( synthId, amount);
     }
     
     _populationSize = populationSize;

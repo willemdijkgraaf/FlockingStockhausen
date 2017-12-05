@@ -1,6 +1,7 @@
 class Vehicle {
   Synth _synth;
   int _id;
+  int _synthId;
   float _mass;
   PVector _pos;
   PVector _vel;
@@ -18,6 +19,7 @@ class Vehicle {
   
   Vehicle(
     int id,
+    int synthId,
     float x, 
     float y, 
     float ms, 
@@ -29,6 +31,7 @@ class Vehicle {
     Synth synth
   ) {
     _id = id;
+    _synthId = synthId;
     _pos = new PVector(x, y);
     _vel = new PVector(0, 0);
     _acc = new PVector(0, 0);
@@ -186,7 +189,7 @@ class Vehicle {
     else {_groupType = 0;} // point
     
     if (_groupType != _previousGroupType) {
-      _synth.changeSynth(_id, _groupType);
+      _synth.changeSynth(_synthId, _groupType);
     }
   }
   public void display(int groupCount, int groupIntensity) {
@@ -198,7 +201,7 @@ class Vehicle {
   void playMe() {
     int freq = (int)map(height - _pos.y, 0, height, 50, 4000);
     float amp = map(_pos.x, 0, width, 0, 1);
-    _synth.adjustSynth(_id,freq,amp);
+    _synth.adjustSynth(_synthId,freq,amp);
   }
   
   void drawMe(int groupCount, int intensity) {
