@@ -10,67 +10,24 @@
 
 ~population = 0;
 
-
 ~p3 = NetAddr.new("127.0.0.1", 10001);    // create the NetAddr for the processing sketch
 ~p3.sendMsg("/P3/AreaX", ~population, 10);
 ~p3.sendMsg("/P3/AreaWidth", ~population, 200);
-~p3.sendMsg("/P3/AreaY",~population, 0);
+~p3.sendMsg("/P3/AreaY",~population, 5);
 ~p3.sendMsg("/P3/AreaHeight", ~population, 720);
 ~p3.sendMsg("/P3/PopulationSize", 0, 10);
 
 ~p3.sendMsg("/P3/CreatePopulation", ~size, ~swarmDistance, ~desiredDistance, ~areaX, ~areaY, ~areaWidth, ~areaHeight);
 
 ~p3.sendMsg("/P3/FrameRate", 20);
+
+~changePopulation.value(which: ~population, when: 0, time: 2, start: 0, finish: 70, step: 1); // increase over time
+~changePopulation.value(which: ~population, when: 0, time: 4, start: 70, finish: 0, step: 1); // decrease over time
+
+
 )
 
-// TEMPORAL FUNCTION TO SET POPULATION SIZE
-
-(
-~temporalPopulationChange = {
-	arg start, finish, step, period;
-	var time, steps, p3, seriesSize, arrayStep;
-	if (start < finish,
-		{
-			time = period/((finish - start)/step);
-			seriesSize = (finish - start / step)+1;
-			arrayStep = step;
-		},
-		{
-			time = period/((start - finish)/step);
-			seriesSize = (start - finish / step)+1;
-			arrayStep = step * -1;
-	    });
-
-	p3 = NetAddr.new("127.0.0.1", 10001);
-
-	Routine(
-	{
-			Array.series(seriesSize, start, arrayStep).do(
-		{
-				arg size;
-				p3.sendMsg("/P3/PopulationSize", ~population, size);
-					postln(size);
-					(time).yield;
-		});
-})};
-)
-
-(
-~changePopulation = {
-	arg when, time, start, finish, step;
-	TempoClock.default.sched(when, ~temporalPopulationChange.value(start:start, finish:finish, step:step, period:time));
-}
-)
-
-~changePopulation.value(when: 5, time: 10, start: 0, finish: 40, step: 1);
-~changePopulation.value(when: 5, time: 5, start: 40, finish: 0, step: 1);
-
-// ~populationGrowth.stop;
-
-// OSC RECEIVE
-OSCFunc.trace(true); // Turn posting on
-OSCFunc.trace(false); // Turn posting off
-
+// ALL BASIC FUNCTIONALITY STARTS HERE
 (
 ~synths = Array.newClear(4000);
 
@@ -122,9 +79,45 @@ SynthDef("mass-synth",
 ~oscAdjustSynth= OSCdef.newMatching(\SCAdjustSynth, { arg msg, time, addr, recvPort; ~adjustSynth.value(msg[1], msg[2], msg[3]);}, "/SC/AdjustSynth");
 ~oscFreeSynth= OSCdef.newMatching(\SCFreeSynth, { arg msg, time, addr, recvPort; ~freeSynth.value(msg[1]);}, "/SC/FreeSynth");
 
+// TEMPORAL FUNCTION TO SET POPULATION SIZE
+~temporalPopulationChange = {
+	arg populationId, start, finish, step, period;
+	var time, steps, p3, seriesSize, arrayStep;
+	if (start < finish,
+		{
+			time = period/((finish - start)/step);
+			seriesSize = (finish - start / step)+1;
+			arrayStep = step;
+		},
+		{
+			time = period/((start - finish)/step);
+			seriesSize = (start - finish / step)+1;
+			arrayStep = step * -1;
+	    });
 
+	p3 = NetAddr.new("127.0.0.1", 10001);
+
+	Routine(
+	{
+			Array.series(seriesSize, start, arrayStep).do(
+		{
+				arg size;
+				p3.sendMsg("/P3/PopulationSize", populationId, size);
+					postln(size);
+					(time).yield;
+		});
+})};
+
+~changePopulation = {
+	arg which, when, time, start, finish, step;
+	TempoClock.default.sched(when, ~temporalPopulationChange.value(which: which, start:start, finish:finish, step:step, period:time));
+};
 )
 
 ~oscCreateSynth.free;
 ~oscAdjustSynth.free;
 ~oscFreeSynth.free;
+
+// OSC RECEIVE
+OSCFunc.trace(true); // Turn posting on
+OSCFunc.trace(false); // Turn posting off
