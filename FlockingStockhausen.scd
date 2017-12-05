@@ -8,15 +8,15 @@
 ~areaWidth = 10;
 ~areaHeight = 10;
 
-~population = 0;
+~population = 1;
 
 
 ~p3 = NetAddr.new("127.0.0.1", 10001);    // create the NetAddr for the processing sketch
 ~p3.sendMsg("/P3/AreaX", ~population, 10);
 ~p3.sendMsg("/P3/AreaWidth", ~population, 200);
-~p3.sendMsg("/P3/AreaY",~population, 560);
-~p3.sendMsg("/P3/AreaHeight", ~population, 150);
-~p3.sendMsg("/P3/PopulationSize", ~population, 0);
+~p3.sendMsg("/P3/AreaY",~population, 0);
+~p3.sendMsg("/P3/AreaHeight", ~population, 720);
+~p3.sendMsg("/P3/PopulationSize", 0, 0);
 ~p3.sendMsg("/P3/CreatePopulation", ~size, ~swarmDistance, ~desiredDistance, ~areaX, ~areaY, ~areaWidth, ~areaHeight);
 
 ~p3.sendMsg("/P3/FrameRate", 20);
@@ -24,19 +24,26 @@
 
 // TEMPORAL FUNCTION TO SET POPULATION SIZE
 (
-~populationGrowth = Routine(
+~populationGrowth = {
+	arg start, finish, step, totalTime;
+	var time, steps, p3;
+
+	time = totalTime/((finish - start)/step);
+	p3 = NetAddr.new("127.0.0.1", 10001);
+
+	Routine(
 	{
-		[10,20,30,20,10,0].do(
+			Array.series((finish - start / step)+1, start, step).do(
 		{
 				arg size;
-				~p3.sendMsg("/P3/PopulationSize", size);
-				10.yield;
+				p3.sendMsg("/P3/PopulationSize", ~population, size);
+					postln(size);
+					(time).yield;
 		});
-});
+})};
 )
 
-~populationGrowth.next;
-TempoClock.default.sched(0, ~populationGrowth);
+TempoClock.default.sched(0, ~populationGrowth.value(start:0, finish:0, step:1, totalTime:2));
 ~populationGrowth.stop;
 
 // OSC RECEIVE
