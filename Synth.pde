@@ -14,6 +14,7 @@ class Synth {
     OscMessage message = new OscMessage("/SC/CreateSynth");
     message.add(id);
     _osc.send(message, _remoteLocation);
+
   }
   
   void adjustSynth(int id, int freq, float amp) {
@@ -21,7 +22,7 @@ class Synth {
     message.add(id);
     message.add(freq);
     message.add(amp);
-    _osc.send(message, _remoteLocation); 
+    _osc.send(message, _remoteLocation);
   }
   
   void stopRange(int lowId, int amount) {
