@@ -19,6 +19,7 @@ class Population {
     Synth synth) 
   {
     _id = id;
+    area.id = str(_id);
     _populationSize = intitialPopulationSize;
     _swarmDistance = swarmDistance;
     _swarmDistance = swarmDistance;

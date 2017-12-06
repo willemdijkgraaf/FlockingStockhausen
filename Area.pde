@@ -1,6 +1,6 @@
 class Area {
   private float _y, _w, _h, _x;
-
+  public String id;
   Area(float x, float y, float w, float h) {
     _y = y;
     _w = w;
@@ -53,5 +53,10 @@ class Area {
     fill(60,0);
     stroke(255);
     rect(_x, _y, _w, _h);
+    
+    textSize(16);
+    stroke(0);
+    fill(255);
+    text(id, _x+10, _y+20);
   }
 }

@@ -16,16 +16,28 @@
 
 ~p3.sendMsg("/P3/AreaX", ~population, 10);
 ~p3.sendMsg("/P3/AreaWidth", ~population, 1200);
-~p3.sendMsg("/P3/AreaY",~population, 670);
-~p3.sendMsg("/P3/AreaHeight", ~population, 40);
-~p3.sendMsg("/P3/PopulationSize", 3, 0);
+~p3.sendMsg("/P3/AreaY",~population, 620);
+~p3.sendMsg("/P3/AreaHeight", ~population, 100);
+~p3.sendMsg("/P3/PopulationSize", 1, 0);
 
 ~p3.sendMsg("/P3/CreatePopulation", ~size, ~swarmDistance, ~desiredDistance, ~areaX, ~areaY, ~areaWidth, ~areaHeight);
 
 ~p3.sendMsg("/P3/FrameRate", 50);
 
-~changePopulation.value(which: ~population, when: 0, time: 4, start: 0, finish: 10, step: 1); // increase over time
-~changePopulation.value(which: ~population, when: 0, time: 4, start: 5, finish: 0, step: 1); // decrease over time
+~changePopulation.value(
+	which: 0,
+	when: 0,
+	time: 4,
+	start: 0,
+	finish: 10,
+	step: 1);
+~changePopulation.value(
+	which: 1,
+	when: 0,
+	time: 4,
+	start: 50,
+	finish: 9,
+	step: 1);
 
 )
 
