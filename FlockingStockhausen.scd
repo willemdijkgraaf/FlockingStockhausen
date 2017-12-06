@@ -12,18 +12,17 @@
 
 ~p3 = NetAddr.new("127.0.0.1", 10001);    // create the NetAddr for the processing sketch
 ~p3.sendMsg("/P3/AreaX", ~population, 10);
-~p3.sendMsg("/P3/AreaWidth", ~population, 200);
-~p3.sendMsg("/P3/AreaY",~population, 5);
-~p3.sendMsg("/P3/AreaHeight", ~population, 720);
+~p3.sendMsg("/P3/AreaWidth", ~population, 1200);
+~p3.sendMsg("/P3/AreaY",~population, 670);
+~p3.sendMsg("/P3/AreaHeight", ~population, 40);
 ~p3.sendMsg("/P3/PopulationSize", 0, 10);
 
 ~p3.sendMsg("/P3/CreatePopulation", ~size, ~swarmDistance, ~desiredDistance, ~areaX, ~areaY, ~areaWidth, ~areaHeight);
 
-~p3.sendMsg("/P3/FrameRate", 20);
+~p3.sendMsg("/P3/FrameRate", 50);
 
-~changePopulation.value(which: ~population, when: 0, time: 2, start: 0, finish: 70, step: 1); // increase over time
-~changePopulation.value(which: ~population, when: 0, time: 4, start: 70, finish: 0, step: 1); // decrease over time
-
+~changePopulation.value(which: ~population, when: 0, time: 4, start: 0, finish: 132, step: 1); // increase over time
+~changePopulation.value(which: ~population, when: 0, time: 4, start: 5, finish: 0, step: 1); // decrease over time
 
 )
 
@@ -34,19 +33,25 @@
 SynthDef("point-synth",
 	{
 		arg freq = 440, amp = 0.0;
-		Out.ar(0, [SinOsc.ar(freq, 0, amp), SinOsc.ar(freq, 0, amp)])
+		var env = Env.adsr(0.05, 0.1, 0.1);
+		var gen = EnvGen.kr(env, 1, doneAction: 2);
+		Out.ar(0, [SinOsc.ar(freq, 0, amp) * gen, SinOsc.ar(freq, 0, amp) * gen ])
 }).send;
 
 SynthDef("group-synth",
 	{
 		arg freq = 440, amp = 0.0;
-		Out.ar(0, [SawDPW.ar(freq, 0, amp), SawDPW.ar(freq, 0, amp)])
+		var env = Env.adsr(0.05, 0.1, 0.1);
+		var gen = EnvGen.kr(env, 1, doneAction: 2);
+		Out.ar(0, [SawDPW.ar(freq, 0, amp) * gen , SawDPW.ar(freq, 0, amp) * gen ])
 }).send;
 
 SynthDef("mass-synth",
 	{
 		arg freq = 440, amp = 0.0;
-		Out.ar(0, [PulseDPW.ar(freq, 0.1, amp), PulseDPW.ar(freq, 0.9, amp)])
+		var env = Env.adsr(0.05, 0.1, 0.1);
+		var gen = EnvGen.kr(env, 1, doneAction: 2);
+		Out.ar(0, [PulseDPW.ar(freq, 0.1, amp) * gen, PulseDPW.ar(freq, 0.9, amp) * gen])
 }).send;
 
 ~createSynth = {
@@ -69,7 +74,7 @@ SynthDef("mass-synth",
 	~synths[id].free;
 	switch (type,
 		0,   { ~synths.put(id, Synth("point-synth")); },
-		1, { ~synths.put(id, Synth("group-synth"));},
+		1, { ~synths.put(id, Synth("group-synth")); },
 		2, { ~synths.put(id, Synth("mass-synth")); },
 	);
 };
