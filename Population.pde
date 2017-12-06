@@ -22,7 +22,6 @@ class Population {
     area.id = str(_id);
     _populationSize = intitialPopulationSize;
     _swarmDistance = swarmDistance;
-    _swarmDistance = swarmDistance;
     _desiredDistance = desiredDistance;
     _area = area;
     _vehicles = new Vehicle[_maxPopulationSize];

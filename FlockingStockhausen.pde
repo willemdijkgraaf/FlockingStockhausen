@@ -15,31 +15,12 @@ void setup() {
   size(1280, 720);
   frameRate(40);
 
-  
-  
   _groupMembershipUpdateRate = 10;
   
   NetAddress remoteLocation = new NetAddress("127.0.0.1",57120);
   _osc = new OscP5(this, 10001);
   _synth = new Synth(_osc, remoteLocation);
   
-  int initialPopulationSize = 0;
-  float swarmDistance = 50;
-  float desiredDistance = 30;
-  
-  float y = 5;
-  float h = (height - 10);
-  float x = 5;
-  float w = (width/2) - 10;
-  Area area = new Area(x,y,w,h);
-  createPopulation(initialPopulationSize, swarmDistance, desiredDistance, area);
- 
-  y = 5;
-  h = (height - 10);
-  x = (width/2);
-  w = (width/2) - 10;
-  area = new Area(x,y,w,h);
-  createPopulation(initialPopulationSize, swarmDistance, desiredDistance, area);
 }
 
 void createPopulation(int populationSize, float swarmDistance, float desiredDistance, Area area){
@@ -72,7 +53,7 @@ void draw() {
 }
 
 void oscEvent(OscMessage theOscMessage) {
-  //println(theOscMessage);
+  println(theOscMessage);
   
   // Left Margin
   if (theOscMessage.checkAddrPattern("/P3/AreaX") && theOscMessage.checkTypetag("ii") ) {

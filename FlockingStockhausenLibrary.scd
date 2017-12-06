@@ -73,6 +73,11 @@ SynthDef("mass-synth",
 	});
 };
 
+~createPopulation = {
+	arg size, swarmDistance, desiredDistance, x, y, width, height;
+	~p3.sendMsg("/P3/CreatePopulation", size, swarmDistance, desiredDistance, x, y, width, height);
+};
+
 ~temporalPopulationChange = {
 	arg populationId, start, finish, step, duration;
 	var time, steps, p3, seriesSize, arrayStep;
