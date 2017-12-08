@@ -27,8 +27,8 @@
 ~desiredDistance = 30; // default 30
 ~areaX = 0;
 ~areaY = 0;
-~areaWidth = 10;
-~areaHeight = 10;
+~areaWidth = 100;
+~areaHeight = 100;
 
 
 )
@@ -38,9 +38,9 @@
 
 ~p3.sendMsg("/P3/AreaX", ~population, 10);
 ~p3.sendMsg("/P3/AreaWidth", ~population, 1200);
-~p3.sendMsg("/P3/AreaY",~population, 620);
-~p3.sendMsg("/P3/AreaHeight", ~population, 100);
-~p3.sendMsg("/P3/PopulationSize", 0, 0);
+~p3.sendMsg("/P3/AreaY",~population, 10);
+~p3.sendMsg("/P3/AreaHeight", ~population, 10);
+~p3.sendMsg("/P3/PopulationSize", ~population, 0);
 
 ~p3.sendMsg("/P3/CreatePopulation", ~size, ~swarmDistance, ~desiredDistance, ~areaX, ~areaY, ~areaWidth, ~areaHeight);
 
