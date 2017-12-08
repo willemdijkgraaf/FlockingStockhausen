@@ -1,13 +1,13 @@
 // SCORE
 (
 ~score = [
-	//createPopualtion  size:  swarmDist desiredDist x    y     width height
-	[~createPopulation, 0,     50,       30,         0,   50,   10,   100],
-	[~createPopulation, 0,     50,       30,         0,   650,  10,   70],
+	//createPopualtion  when: size:  swarmDist desiredDist x    y     width height
+	[~createPopulation, 0,       0,      50,             30,             0,   50,   10,   100],
+	[~createPopulation, 0,       0,      50,             30,             0,   650, 10,   70],
 
-	//changePopulation  which: when: duration: start: finish: stepSize:
-	[~changePopulation, [1,       5,       4,            10,      0,     1]],
-	[~changePopulation, [2,       5,       4,            10,      0,     2]]
+	//changePopulation  when: duration: which: start: finish: stepSize:
+	[~changePopulation, [5,       10,          1,       4,        0,     1]],
+	[~changePopulation, [5,       4,            2,       10,      0,     2]]
 ];
 
 ~playComposition.value(~score);

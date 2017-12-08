@@ -42,6 +42,7 @@ SynthDef("mass-synth",
 
 ~freeSynth = {
 	arg id;
+	postln(id);
 	~synths[id].free;
 };
 
@@ -66,16 +67,36 @@ SynthDef("mass-synth",
 	score.do({
 		arg ...arguments;
 		var function = arguments[0][0], args = arguments[0][1];
-		postln(function);
-		postln(args);
-		//var arguments = args;//Dictionary.newFrom(args);
 		function.valueArray(args);
 	});
 };
 
-~createPopulation = {
+~temporalPopulationCreate = {
 	arg size, swarmDistance, desiredDistance, x, y, width, height;
-	~p3.sendMsg("/P3/CreatePopulation", size, swarmDistance, desiredDistance, x, y, width, height);
+
+	Routine(
+	{
+				arg size;
+				~p3.sendMsg(
+					"/P3/CreatePopulation",
+					size,
+					swarmDistance,
+					desiredDistance,
+					x, y, width, height);
+				0.yield;
+		});
+};
+
+~populationCreate = {
+	arg when, size, swarmDistance, desiredDistance, x, y, width, height;
+
+	TempoClock.default.sched(
+		when,
+		~temporalPopulationCreate.value(
+			size,
+			swarmDistance,
+			desiredDistance,
+			x, y, width, height));
 };
 
 ~temporalPopulationChange = {
@@ -104,7 +125,7 @@ SynthDef("mass-synth",
 })};
 
 ~changePopulation = {
-	arg which = 0, when = 0, duration = 0.5, start, finish, step;
+	arg when = 0, duration = 0.5, which = 0, start, finish, step;
 	TempoClock.default.sched(when, ~temporalPopulationChange.value(
 		populationId: which,
 		start:start,
