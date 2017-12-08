@@ -55,8 +55,8 @@ class Population {
     }
     
     if (populationSize < _populationSize) {
-      int index = populationSize-1;
-      if (index < 0) index = 0;
+      int index = populationSize;
+      if (index < 0) return;
       int synthId = _vehicles[index]._synthId;
       int amount = _populationSize - populationSize;
       println("remove start: " + synthId + " amount: " + amount);

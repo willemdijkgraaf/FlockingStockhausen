@@ -6,9 +6,8 @@
 	[~createPopulation, 0,     50,       30,         0,   650,  10,   70],
 
 	//changePopulation  which: when: duration: start: finish: stepSize:
-	[~changePopulation, [0,     5,    4,        0,     10,     1]],
-	[~changePopulation, [1,     5,    4,        0,     10,     2]]
-
+	[~changePopulation, [1,       5,       4,            10,      0,     1]],
+	[~changePopulation, [2,       5,       4,            10,      0,     2]]
 ];
 
 ~playComposition.value(~score);
@@ -35,12 +34,13 @@
 (
 ~population = 0;
 ~population = 1;
+~population = 2;
 
 ~p3.sendMsg("/P3/AreaX", ~population, 10);
-~p3.sendMsg("/P3/AreaWidth", ~population, 1200);
+~p3.sendMsg("/P3/AreaWidth", ~population, 200);
 ~p3.sendMsg("/P3/AreaY",~population, 10);
 ~p3.sendMsg("/P3/AreaHeight", ~population, 10);
-~p3.sendMsg("/P3/PopulationSize", ~population, 0);
+~p3.sendMsg("/P3/PopulationSize", ~population, 100);
 
 ~p3.sendMsg("/P3/CreatePopulation", ~size, ~swarmDistance, ~desiredDistance, ~areaX, ~areaY, ~areaWidth, ~areaHeight);
 

@@ -199,9 +199,9 @@ class Vehicle {
     playMe();
   }
   void playMe() {
-    int freq = (int)map(pow(height - this._pos.y,2), 20, pow(height,2), 1, 9000);
+    int freq = (int)map(pow(height - this._pos.y,2), 50, pow(height,2), 1, 9000);
     float amp = map(_pos.x, 0, width, 0, 1);
-    _synth.adjustSynth(_synthId,freq,amp);
+    _synth.adjustSynth(this._synthId,freq,amp);
   }
   
   void drawMe(int groupCount, int intensity) {
