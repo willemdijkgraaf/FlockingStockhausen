@@ -42,7 +42,6 @@ SynthDef("mass-synth",
 
 ~freeSynth = {
 	arg id;
-	postln(id);
 	~synths[id].free;
 };
 
@@ -89,7 +88,10 @@ SynthDef("mass-synth",
 
 ~populationCreate = {
 	arg when, size, swarmDistance, desiredDistance, x, y, width, height;
-
+	postln(x);
+	postln(y);
+	postln(width);
+	postln(height);
 	TempoClock.default.sched(
 		when,
 		~temporalPopulationCreate.value(
@@ -97,6 +99,7 @@ SynthDef("mass-synth",
 			swarmDistance,
 			desiredDistance,
 			x, y, width, height));
+
 };
 
 ~temporalPopulationChange = {

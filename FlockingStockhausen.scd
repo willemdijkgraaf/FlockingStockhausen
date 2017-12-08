@@ -2,12 +2,12 @@
 (
 ~score = [
 	//createPopualtion  when: size:  swarmDist desiredDist x    y     width height
-	[~createPopulation, 0,       0,      50,             30,             0,   50,   10,   100],
-	[~createPopulation, 0,       0,      50,             30,             0,   650, 10,   70],
+	[~createPopulation, 1,       10,     50,            30,             0,   50,   100,   70],
+	//[~createPopulation, 3,       20,    50,            30,             0,   150, 200,   150],
 
 	//changePopulation  when: duration: which: start: finish: stepSize:
-	[~changePopulation, [5,       10,          1,       4,        0,     1]],
-	[~changePopulation, [5,       4,            2,       10,      0,     2]]
+	[~changePopulation, [5,       10,          1,       10,        0,     1]],
+	//[~changePopulation, [5,       12,          2,       20,        200, 1]]
 ];
 
 ~playComposition.value(~score);
