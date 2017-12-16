@@ -60,80 +60,171 @@ SynthDef("mass-synth",
 ~oscAdjustSynth= OSCdef.newMatching(\SCAdjustSynth, { arg msg, time, addr, recvPort; ~adjustSynth.value(msg[1], msg[2], msg[3]);}, "/SC/AdjustSynth");
 ~oscFreeSynth= OSCdef.newMatching(\SCFreeSynth, { arg msg, time, addr, recvPort; ~freeSynth.value(msg[1]);}, "/SC/FreeSynth");
 
+
 // Compositional functions
+
+// TEMPORAL RANGE CHANGE
+~temporalRangeChange = {
+	arg
+	    populationId,
+		from,
+		to,
+		step,
+		duration,
+		oscCommand;
+	var time, arrayStep, seriesSize;
+
+	if (from < to,
+		{
+			time = duration/((to - from)/step);
+			seriesSize = (to - from / step)+1;
+			arrayStep = step;
+		},
+		{
+			time = duration/((from - to)/step);
+			seriesSize = (from - to / step)+1;
+			arrayStep = step * -1;
+	    });
+
+	Routine(
+	{
+		Array.series(seriesSize, from, arrayStep).do(
+		{
+				arg value,time;
+				~p3.sendMsg(oscCommand , ~population, value);
+				(time).yield;
+		});
+})};
+
+// PLAY
 ~playComposition = {
 	arg score;
 	score.do({
 		arg ...arguments;
 		var function = arguments[0][0], args = arguments[0][1];
+
+		postln(arguments[0][0]);
+		postln(arguments[0][1]);
+
 		function.valueArray(args);
 	});
 };
 
+// POPULATION
 ~temporalPopulationCreate = {
-	arg size, swarmDistance, desiredDistance, x, y, width, height;
+	arg
+		size,
+		swarmDistance,
+		desiredDistance,
+		x, y,
+		width, height;
 
 	Routine(
 	{
-				arg size;
 				~p3.sendMsg(
 					"/P3/CreatePopulation",
 					size,
 					swarmDistance,
 					desiredDistance,
-					x, y, width, height);
+					x, y,
+					width, height);
 				0.yield;
 		});
 };
 
 ~populationCreate = {
-	arg when, size, swarmDistance, desiredDistance, x, y, width, height;
-	postln(x);
-	postln(y);
-	postln(width);
-	postln(height);
+	arg
+		when,
+		size,
+		swarmDistance,
+		desiredDistance,
+		x, y,
+		width, height;
+	postln(when);
 	TempoClock.default.sched(
 		when,
 		~temporalPopulationCreate.value(
 			size,
 			swarmDistance,
 			desiredDistance,
-			x, y, width, height));
+			x, y,
+			width, height));
 
 };
 
-~temporalPopulationChange = {
-	arg populationId, start, finish, step, duration;
-	var time, steps, p3, seriesSize, arrayStep;
-	if (start < finish,
-		{
-			time = duration/((finish - start)/step);
-			seriesSize = (finish - start / step)+1;
-			arrayStep = step;
-		},
-		{
-			time = duration/((start - finish)/step);
-			seriesSize = (start - finish / step)+1;
-			arrayStep = step * -1;
-	    });
-
-	Routine(
-	{
-			Array.series(seriesSize, start, arrayStep).do(
-		{
-				arg size;
-				~p3.sendMsg("/P3/PopulationSize", populationId, size);
-					(time).yield;
-		});
-})};
-
 ~changePopulation = {
-	arg when = 0, duration = 0.5, which = 0, start, finish, step;
-	TempoClock.default.sched(when, ~temporalPopulationChange.value(
+	arg
+		when = 0,
+		duration = 0.5,
+		which = 0,
+		start,
+		finish,
+		step;
+	TempoClock.default.sched(when, ~temporalRangeChange.value(
 		populationId: which,
 		start:start,
 		finish:finish,
 		step:step,
-		duration:duration));
+		duration:duration,
+		oscCommand: "/P3/PopulationSize"
+	));
+};
+
+// TEMPO
+~changeTempo = {
+	arg
+		when = 0,
+		duration = 0.5,
+		start,
+		finish,
+		step;
+
+	TempoClock.default.sched(when, ~temporalRangeChange.value(
+		populationId:0,
+		start:start,
+		finish:finish,
+		step:step,
+		duration:duration,
+		oscCommand:"/P3/FrameRate"
+	));
+};
+
+// POSITION
+~changeHorizontally = {
+	arg
+		when = 0,
+		duration = 0.5,
+		which = 0,
+		fromX,
+		toX,
+		step;
+
+	TempoClock.default.sched(when, ~temporalRangeChange.value(
+		populationId:which,
+		from:fromX,
+		to:toX,
+		step:step,
+		duration:duration,
+		oscCommand:"/P3/AreaX"
+	));
+};
+
+~changeVertically = {
+	arg
+		when = 0,
+		duration = 0.5,
+		which = 0,
+		fromY,
+		toY,
+		step;
+
+	TempoClock.default.sched(when, ~temporalRangeChange.value(
+		populationId:which,
+		from:fromY,
+		to:toY,
+		step:step,
+		duration:duration,
+		oscCommand:"/P3/AreaY"
+	));
 };
 )

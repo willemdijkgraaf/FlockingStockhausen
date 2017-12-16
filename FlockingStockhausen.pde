@@ -88,7 +88,7 @@ void oscEvent(OscMessage theOscMessage) {
   }
   
   // Population size
-  if (theOscMessage.checkAddrPattern("/P3/PopulationSize") && theOscMessage.checkTypetag("ii") ) { //<>//
+  if (theOscMessage.checkAddrPattern("/P3/PopulationSize") && theOscMessage.checkTypetag("ii") ) { //<>// //<>//
     int populationId = theOscMessage.get(0).intValue();
     int populationSize = theOscMessage.get(1).intValue();
     _populations[populationId].setPopulationSize(populationSize);
@@ -105,9 +105,9 @@ void oscEvent(OscMessage theOscMessage) {
   }
   
   // Frame rate
-  if (theOscMessage.checkAddrPattern("/P3/FrameRate") && theOscMessage.checkTypetag("i") ) {
-    int rate = theOscMessage.get(0).intValue();
-    if (rate > 60) return; //<>//
+  if (theOscMessage.checkAddrPattern("/P3/FrameRate") && theOscMessage.checkTypetag("ii") ) {
+    int rate = theOscMessage.get(1).intValue();
+    if (rate > 60) return; //<>// //<>//
     frameRate(rate);
     return;
   }
