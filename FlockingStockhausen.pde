@@ -55,10 +55,10 @@ void draw() {
 void oscEvent(OscMessage theOscMessage) {
   println(theOscMessage);
   
-  // Left Margin
-  if (theOscMessage.checkAddrPattern("/P3/AreaX") && theOscMessage.checkTypetag("ii") ) {
+  // Area X
+  if (theOscMessage.checkAddrPattern("/P3/AreaX") && theOscMessage.checkTypetag("if") ) {
     int populationId = theOscMessage.get(0).intValue();
-    int x = theOscMessage.get(1).intValue();
+    int x = (int)theOscMessage.get(1).floatValue();
     _populations[populationId]._area.setX(x);
     return;
   }
@@ -71,10 +71,10 @@ void oscEvent(OscMessage theOscMessage) {
     return;
   }
   
-  // Top Margin
-  if (theOscMessage.checkAddrPattern("/P3/AreaY") && theOscMessage.checkTypetag("ii") ) {
+  // Area Y
+  if (theOscMessage.checkAddrPattern("/P3/AreaY") && theOscMessage.checkTypetag("if") ) {
     int populationId = theOscMessage.get(0).intValue();
-    int y = theOscMessage.get(1).intValue();
+    int y = (int)theOscMessage.get(1).floatValue();
     _populations[populationId]._area.setY(y);
     return;
   }

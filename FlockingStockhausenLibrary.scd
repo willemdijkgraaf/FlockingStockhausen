@@ -132,7 +132,7 @@ SynthDef("mass-synth",
 		});
 };
 
-~populationCreate = {
+~createPopulation = {
 	arg
 		when,
 		size,
@@ -181,8 +181,8 @@ SynthDef("mass-synth",
 
 	TempoClock.default.sched(when, ~temporalRangeChange.value(
 		populationId:0,
-		start:start,
-		finish:finish,
+		from:start,
+		to:finish,
 		step:step,
 		duration:duration,
 		oscCommand:"/P3/FrameRate"
@@ -190,7 +190,7 @@ SynthDef("mass-synth",
 };
 
 // POSITION
-~changeHorizontally = {
+~moveHorizontally = {
 	arg
 		when = 0,
 		duration = 0.5,
@@ -209,7 +209,7 @@ SynthDef("mass-synth",
 	));
 };
 
-~changeVertically = {
+~moveVertically = {
 	arg
 		when = 0,
 		duration = 0.5,
