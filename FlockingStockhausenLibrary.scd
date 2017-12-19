@@ -63,38 +63,42 @@ SynthDef("mass-synth",
 
 // Compositional functions
 
-// TEMPORAL RANGE CHANGE
+// GENERIC TEMPORAL RANGE CHANGE
 ~temporalRangeChange = {
 	arg
+	    when,
 	    populationId,
 		from,
 		to,
 		step,
 		duration,
 		oscCommand;
-	var time, arrayStep, seriesSize;
+	var interval, arrayStep, seriesSize;
 
 	if (from < to,
 		{
-			time = duration/((to - from)/step);
+			interval = duration/((to - from)/step);
 			seriesSize = (to - from / step)+1;
 			arrayStep = step;
-		},
+		}, // else
 		{
-			time = duration/((from - to)/step);
+			interval = duration/((from - to)/step);
 			seriesSize = (from - to / step)+1;
 			arrayStep = step * -1;
 	    });
-
-	Routine(
-	{
-		Array.series(seriesSize, from, arrayStep).do(
-		{
-				arg value,time;
-				~p3.sendMsg(oscCommand , ~population, value);
-				(time).yield;
-		});
-})};
+	SystemClock.sched(when,
+		Routine(
+			{
+				Array.series(seriesSize, from, arrayStep).do(
+					{
+						arg value;
+						~p3.sendMsg(oscCommand , ~population, value);
+						(interval).yield;
+					});
+			}
+		)
+	 );
+};
 
 // PLAY
 ~playComposition = {
@@ -102,36 +106,11 @@ SynthDef("mass-synth",
 	score.do({
 		arg ...arguments;
 		var function = arguments[0][0], args = arguments[0][1];
-
-		postln(arguments[0][0]);
-		postln(arguments[0][1]);
-
 		function.valueArray(args);
 	});
 };
 
 // POPULATION
-~temporalPopulationCreate = {
-	arg
-		size,
-		swarmDistance,
-		desiredDistance,
-		x, y,
-		width, height;
-
-	Routine(
-	{
-				~p3.sendMsg(
-					"/P3/CreatePopulation",
-					size,
-					swarmDistance,
-					desiredDistance,
-					x, y,
-					width, height);
-				0.yield;
-		});
-};
-
 ~createPopulation = {
 	arg
 		when,
@@ -140,16 +119,20 @@ SynthDef("mass-synth",
 		desiredDistance,
 		x, y,
 		width, height;
-	postln(when);
-	TempoClock.default.sched(
+	SystemClock.sched(
 		when,
-		~temporalPopulationCreate.value(
-			size,
-			swarmDistance,
-			desiredDistance,
-			x, y,
-			width, height));
-
+			Routine(
+			{
+				~p3.sendMsg(
+					"/P3/CreatePopulation",
+					size,
+					swarmDistance,
+					desiredDistance,
+					x, y,
+					width, height);
+				0.yield;
+			})
+	);
 };
 
 ~changePopulation = {
@@ -160,14 +143,15 @@ SynthDef("mass-synth",
 		start,
 		finish,
 		step;
-	TempoClock.default.sched(when, ~temporalRangeChange.value(
+	~temporalRangeChange.value(
+		when: when,
 		populationId: which,
-		start:start,
-		finish:finish,
+		from:start,
+		to:finish,
 		step:step,
 		duration:duration,
 		oscCommand: "/P3/PopulationSize"
-	));
+	);
 };
 
 // TEMPO
@@ -179,52 +163,96 @@ SynthDef("mass-synth",
 		finish,
 		step;
 
-	TempoClock.default.sched(when, ~temporalRangeChange.value(
+	~temporalRangeChange.value(
+		when: when,
 		populationId:0,
 		from:start,
 		to:finish,
 		step:step,
 		duration:duration,
 		oscCommand:"/P3/FrameRate"
-	));
+	);
 };
 
 // POSITION
 ~moveHorizontally = {
 	arg
-		when = 0,
-		duration = 0.5,
-		which = 0,
+		when,
+		duration,
+		which,
 		fromX,
 		toX,
 		step;
 
-	TempoClock.default.sched(when, ~temporalRangeChange.value(
+	~temporalRangeChange.value(
+		when: when,
 		populationId:which,
 		from:fromX,
 		to:toX,
 		step:step,
 		duration:duration,
 		oscCommand:"/P3/AreaX"
-	));
+	);
 };
 
 ~moveVertically = {
 	arg
-		when = 0,
-		duration = 0.5,
-		which = 0,
+		when,
+		duration,
+		which,
 		fromY,
 		toY,
 		step;
 
-	TempoClock.default.sched(when, ~temporalRangeChange.value(
+	~temporalRangeChange.value(
+		when:when,
 		populationId:which,
 		from:fromY,
 		to:toY,
 		step:step,
 		duration:duration,
 		oscCommand:"/P3/AreaY"
-	));
+	);
+};
+
+// AREA SIZE
+~changeWidth = {
+	arg
+		when,
+		duration,
+		which,
+		fromWidth,
+		toWidth,
+		step;
+
+	~temporalRangeChange.value(
+		when: when,
+		populationId:which,
+		from:fromWidth,
+		to:toWidth,
+		step:step,
+		duration:duration,
+		oscCommand:"/P3/AreaWidth"
+	);
+};
+
+~changeHeight = {
+	arg
+		when,
+		duration,
+		which,
+		fromHeight,
+		toHeight,
+		step;
+
+	~temporalRangeChange.value(
+		when: when,
+		populationId:which,
+		from:fromHeight,
+		to:toHeight,
+		step:step,
+		duration:duration,
+		oscCommand:"/P3/AreaWidth"
+	);
 };
 )

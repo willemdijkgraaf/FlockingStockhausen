@@ -2,22 +2,22 @@
 (
 ~score = [
 	//createPopulation  when: size:  swarmDist desiredDist x    y     width height
-	[~createPopulation, [1,       4,     50,            30,             300,   600,   700,   110]],
+	[~createPopulation, [1,       1,     50,            30,             300,   200,   300,   40]],
 	//[~createPopulation, [3,       20,    50,            30,             0,   150, 200,   150]],
 	//[~createPopulation, [3,       8,    50,            30,             400,   600, 800,   120]],
 
 	//changePopulation  when: duration: which: start: finish: stepSize:
-	//[~changePopulation, [5,       10,          1,       10,        0,     1]],
-	//[~changePopulation, [5,       12,          2,       20,        200, 1]],
+	[~changePopulation, [5,       20,          0,       1,       20,     1]],
+	//[~changePopulation, [0,       10,          1,       1,       20,     1]],
 
 	// moveHorizontally when: duration: which: fromX: toX: step:
-	//[~moveHorizontally, [14, 5, 1, 0, 150, 1]],
+	//[~moveHorizontally, [0,      1,            2,        400,     0,    1]],
 
 	// changeVertically when: duration: which: fromY: toY: step:
-	//[~moveVertically, [1, 5000, 0 400, 100, 10]],
+	//[~moveVertically,    [0,      5,             1,       200,    0,    1]],
 
-	// changeTempo when: duration: from: to: step:
-	//[~changeTempo, [1, 40, 30, 60, 2]]
+	// changeTempo when: duration: from: to:   step:
+	[~changeTempo, [25,      10,            60,       0,  1]]
 ];
 
 ~playComposition.value(~score);
@@ -43,7 +43,7 @@
 
 ~p3.sendMsg("/P3/AreaX", 0, 40.0);
 ~p3.sendMsg("/P3/AreaWidth", 0, 900);
-~p3.sendMsg("/P3/AreaY",0, 2.0);
+~p3.sendMsg("/P3/AreaY",0, 400.0);
 ~p3.sendMsg("/P3/AreaHeight", 0, 50);
 ~p3.sendMsg("/P3/PopulationSize", 1, 10);
 

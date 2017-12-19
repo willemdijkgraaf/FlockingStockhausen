@@ -63,10 +63,10 @@ void oscEvent(OscMessage theOscMessage) {
     return;
   }
   
-  // Right Margin
-  if (theOscMessage.checkAddrPattern("/P3/AreaWidth") && theOscMessage.checkTypetag("ii") ) {
+  // Area Width
+  if (theOscMessage.checkAddrPattern("/P3/AreaWidth") && theOscMessage.checkTypetag("if") ) {
     int populationId = theOscMessage.get(0).intValue();
-    int myWidth = theOscMessage.get(1).intValue();
+    int myWidth = (int)theOscMessage.get(1).floatValue();
     _populations[populationId]._area.setWidth(myWidth);
     return;
   }
@@ -79,10 +79,10 @@ void oscEvent(OscMessage theOscMessage) {
     return;
   }
   
-  // Bottom Margin
-  if (theOscMessage.checkAddrPattern("/P3/AreaHeight") && theOscMessage.checkTypetag("ii") ) {
+  // Area Height
+  if (theOscMessage.checkAddrPattern("/P3/AreaHeight") && theOscMessage.checkTypetag("if") ) {
     int populationId = theOscMessage.get(0).intValue();
-    int myHeight = theOscMessage.get(1).intValue();
+    int myHeight = (int)theOscMessage.get(1).floatValue();
     _populations[populationId]._area.setHeight(myHeight);
     return;
   }
@@ -105,9 +105,10 @@ void oscEvent(OscMessage theOscMessage) {
   }
   
   // Frame rate
-  if (theOscMessage.checkAddrPattern("/P3/FrameRate") && theOscMessage.checkTypetag("ii") ) {
-    int rate = theOscMessage.get(1).intValue();
+  if (theOscMessage.checkAddrPattern("/P3/FrameRate") && theOscMessage.checkTypetag("if") ) {
+    int rate = (int)theOscMessage.get(1).floatValue();
     if (rate > 60) return; //<>// //<>//
+    if (rate < 1) return;
     frameRate(rate);
     return;
   }
